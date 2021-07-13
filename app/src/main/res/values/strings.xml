@@ -2,4 +2,6 @@
     <string name="app_name">KTor WebSocket server issue</string>
     <string name="server_status">Will try to start server...</string>
     <string name="serverStartedMessage">Server started</string>
+    <string name="ipAddressUnknown">No IP address (connected to WiFi?)</string>
+    <string name="localIpAddressMessage">Connect to %1$s:13276</string>
 </resources>

@@ -1,9 +1,9 @@
 package com.example.ktorwsissue
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -19,6 +19,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
+import java.net.NetworkInterface
 import java.nio.charset.Charset
 import java.util.logging.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -69,6 +70,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.serverStatusText).text = getString(R.string.serverStartedMessage)
+
+        val localIpAddress = getIpAddressInLocalNetwork()
+        if (localIpAddress != null) {
+            findViewById<TextView>(R.id.ipAddressText).text =
+                getString(R.string.localIpAddressMessage, localIpAddress)
+        }
     }
 
     override fun onDestroy() {
@@ -76,5 +83,18 @@ class MainActivity : AppCompatActivity() {
         server.stop(1_000, 2_000)
 
         super.onDestroy()
+    }
+
+    private fun getIpAddressInLocalNetwork(): String? {
+        val networkInterfaces = NetworkInterface.getNetworkInterfaces().iterator().asSequence()
+        val localAddresses = networkInterfaces.flatMap {
+            it.inetAddresses.asSequence()
+                .filter { inetAddress ->
+                    inetAddress.isSiteLocalAddress && !inetAddress.hostAddress.contains(":") &&
+                        inetAddress.hostAddress != "127.0.0.1"
+                }
+                .map { inetAddress -> inetAddress.hostAddress }
+        }
+        return localAddresses.firstOrNull()
     }
 }
