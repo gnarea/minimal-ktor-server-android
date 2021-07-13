@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KTor WebSocket server issue</string>
+    <string name="server_status">Will try to start server...</string>
+    <string name="serverStartedMessage">Server started</string>
 </resources>
