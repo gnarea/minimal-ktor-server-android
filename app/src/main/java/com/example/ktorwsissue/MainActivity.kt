@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         CoroutineScope(coroutineContext).launch {
+            logger.info("Starting server...")
             server.start(wait = true)
         }
 
