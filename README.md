@@ -25,7 +25,7 @@ This is a WebSocket endpoint that implements the following protocol:
 
 ## Automated test
 
-[`ServerTest`](app/src/test/java/com/example/ktorwsissue/ServerTest.kt) contains a test that checks that verifies the endpoints above.
+[`ServerTest`](app/src/test/java/com/example/ktorwsissue/ServerTest.kt) contains a test that checks the endpoints above.
 
 **Make sure to set the right IP to your Android device on your WiFi network.**
 
