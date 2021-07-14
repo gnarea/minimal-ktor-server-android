@@ -7,13 +7,11 @@ import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.webSocket
 import io.ktor.client.request.get
 import io.ktor.http.cio.websocket.send
-import io.ktor.util.KtorExperimentalAPI
 import java.util.logging.Logger
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.Test
 
-@KtorExperimentalAPI
 class ServerTest {
     private val ktorEngine: HttpClientEngine = OkHttp.create {
         preconfigured = OkHttpClient.Builder()
