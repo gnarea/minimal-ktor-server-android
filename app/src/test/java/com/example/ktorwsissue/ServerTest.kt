@@ -19,7 +19,7 @@ class ServerTest {
             .build()
     }
 
-    private val serverIPAddress = "192.168.1.106"
+    private val serverIPAddress = "192.168.1.110"
 
     private val logger: Logger = Logger.getLogger("Client")
 
