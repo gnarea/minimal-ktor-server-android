@@ -6,6 +6,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.client.HttpClient
+import io.ktor.client.features.websocket.WebSockets as ClientWebSockets
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.features.websocket.webSocket
 import io.ktor.features.CallLogging
 import io.ktor.http.ContentType
 import io.ktor.http.cio.websocket.FrameType
@@ -17,7 +22,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.websocket.WebSockets
+import io.ktor.websocket.WebSockets as ServerWebSockets
 import io.ktor.websocket.webSocket
 import java.net.NetworkInterface
 import java.nio.charset.Charset
@@ -25,6 +30,7 @@ import java.util.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
 
 class MainActivity : AppCompatActivity() {
     private val coroutineContext = Dispatchers.IO
@@ -33,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private val server by lazy {
         embeddedServer(Netty, 13276, watchPaths = emptyList()) {
-            install(WebSockets)
+            install(ServerWebSockets)
             install(CallLogging)
 
             routing {
@@ -67,6 +73,23 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(coroutineContext).launch {
             logger.info("Starting server...")
             server.start(wait = true)
+
+            logger.info("Now get client to connect...")
+
+            val ktorEngine: HttpClientEngine = OkHttp.create {
+                preconfigured = OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .build()
+            }
+            val ktorClient = HttpClient(ktorEngine) {
+                install(ClientWebSockets)
+            }
+            ktorClient.webSocket("ws://127.0.0.1:13276/ws") {
+                logger.info("Connection established")
+                val incomingMessage = incoming.receive()
+                logger.info("Got message $incomingMessage")
+                send("bye")
+            }
         }
 
         findViewById<TextView>(R.id.serverStatusText).text = getString(R.string.serverStartedMessage)

@@ -61,9 +61,9 @@ dependencies {
     implementation "io.ktor:ktor-server-core:$ktorVersion"
     implementation "io.ktor:ktor-server-netty:$ktorVersion"
     implementation "io.ktor:ktor-websockets:$ktorVersion"
-    testImplementation "io.ktor:ktor-websockets:$ktorVersion"
-    testImplementation "io.ktor:ktor-client-websockets:$ktorVersion"
-    testImplementation "io.ktor:ktor-client-cio:$ktorVersion"
-    testImplementation "io.ktor:ktor-client-okhttp:$ktorVersion"
+    implementation "io.ktor:ktor-websockets:$ktorVersion"
+    implementation "io.ktor:ktor-client-websockets:$ktorVersion"
+    implementation "io.ktor:ktor-client-cio:$ktorVersion"
+    implementation "io.ktor:ktor-client-okhttp:$ktorVersion"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 }
