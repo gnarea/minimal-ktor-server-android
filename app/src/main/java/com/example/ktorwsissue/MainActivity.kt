@@ -29,11 +29,11 @@ import java.nio.charset.Charset
 import java.util.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
 class MainActivity : AppCompatActivity() {
-    private val coroutineContext = Dispatchers.IO
 
     private val logger = Logger.getLogger("KtorServer")
 
@@ -70,12 +70,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        CoroutineScope(coroutineContext).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             logger.info("Starting server...")
             server.start(wait = true)
+        }
 
+        CoroutineScope(Dispatchers.Default).launch {
             logger.info("Now get client to connect...")
-
+            delay(3_000)
             val ktorEngine: HttpClientEngine = OkHttp.create {
                 preconfigured = OkHttpClient.Builder()
                     .retryOnConnectionFailure(true)
@@ -90,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 logger.info("Got message $incomingMessage")
                 send("bye")
             }
+
         }
 
         findViewById<TextView>(R.id.serverStatusText).text = getString(R.string.serverStartedMessage)
