@@ -1,0 +1,86 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "org.jetbrains.kotlin.jvm"
+    id 'maven-publish'
+}
+
+apply from: 'https://raw.githubusercontent.com/CKS-ROC/Useful_Gradle/master/version.gradle'
+def version = this.ext.default_version()
+project.group = 'com.baeldung.ktor'
+project.version = version.versionName
+mainClassName = 'APIServer.kt'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility  = JavaVersion.VERSION_1_8
+
+sourceSets {
+    main{
+        kotlin{
+            srcDirs 'com/baeldung/ktor'
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "io.ktor:ktor-websockets:$ktorVersion"
+    testImplementation "io.ktor:ktor-client-websockets:$ktorVersion"
+    testImplementation "io.ktor:ktor-client-cio:$ktorVersion"
+    testImplementation "io.ktor:ktor-client-okhttp:$ktorVersion"
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+
+    implementation "io.ktor:ktor-server-core:$ktorVersion"
+    implementation "io.ktor:ktor-server-netty:$ktorVersion"
+    implementation "io.ktor:ktor-websockets:$ktorVersion"
+    implementation "io.ktor:ktor-gson:$ktorVersion"
+
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation project(path: ':library')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+task runServer(type: JavaExec) {
+    main = 'APIServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+task increaseVersion {
+    group "version Tasks"
+    doLast {
+        this.project.ext.increaseVersion("")
+    }
+}
+
+task increaseHotfixVersion {
+    group "version Tasks"
+    doLast {
+        this.project.ext.increaseHotfixVersion("")
+    }
+}
+
+task decreaseVersion {
+    group "version Tasks"
+    doLast {
+        this.project.ext.decreaseVersion("")
+    }
+}

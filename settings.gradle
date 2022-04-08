@@ -1,3 +1,4 @@
 rootProject.name = "KTor WebSocket server issue"
 include ':app'
 include ':library'
+include ':server'
