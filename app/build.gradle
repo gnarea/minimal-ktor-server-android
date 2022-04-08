@@ -65,4 +65,6 @@ dependencies {
     testImplementation "io.ktor:ktor-client-cio:$ktorVersion"
     testImplementation "io.ktor:ktor-client-okhttp:$ktorVersion"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    implementation project(path: ':library')
 }
